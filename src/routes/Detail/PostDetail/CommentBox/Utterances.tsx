@@ -11,7 +11,6 @@ type Props = {
 }
 
 const Utterances: React.FC<Props> = ({ issueTerm }) => {
-  console.log("issueTerm: ", process.env.NEXT_PUBLIC_UTTERANCES_REPO)
   const [scheme] = useScheme()
   const router = useRouter()
 
@@ -24,10 +23,8 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     script.setAttribute("src", "https://utteranc.es/client.js")
     script.setAttribute("crossorigin", "anonymous")
     script.setAttribute("async", `true`)
-    script.setAttribute("issue-term", "pathname")
+    script.setAttribute("issue-term", issueTerm)
     script.setAttribute("theme", theme)
-    script.setAttribute("label", "Comment")
-    script.setAttribute("repo", "HA-SEUNG-JEONG/morethan--haseung-log")
     const config: { [key: string]: string } = CONFIG.utterances.config
     Object.keys(config).forEach((key) => {
       script.setAttribute(key, config[key])
