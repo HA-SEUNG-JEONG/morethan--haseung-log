@@ -51,7 +51,7 @@ const CONFIG = {
     config: {
       repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "",
       "issue-term": "og:title",
-      label: "Comment",
+      label: "#️⃣Comment",
     },
   },
   cusdis: {
