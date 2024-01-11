@@ -26,7 +26,7 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     script.setAttribute("async", `true`)
     script.setAttribute("issue-term", "pathname")
     script.setAttribute("theme", theme)
-    script.setAttribute("label", "comments")
+    script.setAttribute("label", "Comment")
     script.setAttribute("repo", "HA-SEUNG-JEONG/morethan--haseung-log")
     const config: { [key: string]: string } = CONFIG.utterances.config
     Object.keys(config).forEach((key) => {
