@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://morethan-haseung-log-sdos.vercel.app
+Host: https://morethan-haseung-log.vercel.app
 
 # Sitemaps
-Sitemap: https://morethan-haseung-log-sdos.vercel.app/sitemap.xml
+Sitemap: https://morethan-haseung-log.vercel.app/sitemap.xml
