@@ -23,7 +23,7 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     script.setAttribute("src", "https://utteranc.es/client.js")
     script.setAttribute("crossorigin", "anonymous")
     script.setAttribute("async", `true`)
-    script.setAttribute("issue-term", "pathname")
+    script.setAttribute("issue-term", issueTerm)
     script.setAttribute("theme", theme)
     const config: { [key: string]: string } = CONFIG.utterances.config
     Object.keys(config).forEach((key) => {
@@ -33,7 +33,7 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     return () => {
       anchor.innerHTML = ""
     }
-  }, [scheme, router])
+  }, [scheme, router, issueTerm])
   return (
     <>
       <StyledWrapper id="comments">
