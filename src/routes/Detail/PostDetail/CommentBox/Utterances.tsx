@@ -25,6 +25,7 @@ const Utterances: React.FC<Props> = ({ issueTerm }) => {
     script.setAttribute("async", `true`)
     script.setAttribute("issue-term", issueTerm)
     script.setAttribute("theme", theme)
+    script.setAttribute("label","comments")
     const config: { [key: string]: string } = CONFIG.utterances.config
     Object.keys(config).forEach((key) => {
       script.setAttribute(key, config[key])
