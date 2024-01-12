@@ -23,9 +23,9 @@ const CONFIG = {
   },
 
   // CONFIG configration (required)
-  link: "morethan-haseung-log-sdos.vercel.app",
+  link: "https://morethan-haseung-log.vercel.app/",
   since: 2023, // If leave this empty, current year will be used.
-  lang: "en-US", // ['en-US', 'zh-CN', 'zh-HK', 'zh-TW', 'ja-JP', 'es-ES', 'ko-KR']
+  lang: "ko-KR", // ['en-US', 'zh-CN', 'zh-HK', 'zh-TW', 'ja-JP', 'es-ES', 'ko-KR']
   ogImageGenerateURL: "https://og-image-korean.vercel.app", // The link to generate OG image, don't end with a slash
 
   // notion configuration (required)
@@ -43,7 +43,7 @@ const CONFIG = {
   googleSearchConsole: {
     enable: true,
     config: {
-      siteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+      siteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "HA-SEUNG-JEONG/comments",
     },
   },
   utterances: {
@@ -51,7 +51,7 @@ const CONFIG = {
     config: {
       repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "",
       "issue-term": "og:title",
-      label: "💬 Utterances",
+      label: "Comment",
     },
   },
   cusdis: {
