@@ -43,13 +43,13 @@ const CONFIG = {
   googleSearchConsole: {
     enable: true,
     config: {
-      siteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "HA-SEUNG-JEONG/comments",
+      siteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
     },
   },
   utterances: {
     enable: true,
     config: {
-      repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "",
+      repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "HA-SEUNG-JEONG/comments",
       "issue-term": "og:title",
       label: "Comment",
     },
