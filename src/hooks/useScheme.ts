@@ -1,47 +1,75 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { getCookie, setCookie } from "cookies-next"
-import { useCallback, useEffect } from "react"
-import { queryKey } from "src/constants/queryKey"
+import { CONFIG } from "site.config"
+import { NotionAPI } from "notion-client"
+import { idToUuid } from "notion-utils"
 
-type Scheme = "light" | "dark"
-type SetScheme = (scheme: Scheme) => void
+import getAllPageIds from "src/libs/utils/notion/getAllPageIds"
+import getPageProperties from "src/libs/utils/notion/getPageProperties"
+import { TPosts } from "src/types"
+import { filterPosts } from "src/libs/utils/notion"
 
-const useScheme = (): [Scheme, SetScheme] => {
-  const queryClient = useQueryClient()
-
-  const { data } = useQuery({
-    queryKey: queryKey.scheme(),
-    enabled: false,
-    initialData: "light",
-  })
-
-  const scheme = data === "light" ? "light" : "dark"
-
-  // const setScheme = (scheme: "light" | "dark") => {
-  //   setCookie("scheme", scheme)
-
-  //   queryClient.setQueryData(queryKey.scheme(), scheme)
-  // }
-
-  // wrapping setScheme to useCallback
-
-  const setScheme = useCallback(
-    (scheme: "light" | "dark") => {
-      setCookie("scheme", scheme)
-
-      queryClient.setQueryData(queryKey.scheme(), scheme)
-    },
-    [queryClient]
-  )
-
-  useEffect(() => {
-    if (!window) return
-
-    const scheme = getCookie("scheme")
-    setScheme(scheme === "light" ? "light" : "dark")
-  })
-
-  return [scheme, setScheme]
+declare global {
+  var notionData: { TPosts: TPosts; savedDate: Date }
 }
 
-export default useScheme
+/**
+ * @param {{ includePages: boolean }} - false: posts only / true: include pages
+ */
+
+// TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
+export const getPosts = async () => {
+  if (global?.notionData) {
+    const saved = global.notionData.savedDate
+    const now = new Date()
+    const diff = (now.getTime() - saved.getTime()) / 1000
+    if (diff < 60 * 60) {
+      return global.notionData.TPosts
+    }
+  }
+
+  let id = CONFIG.notionConfig.pageId as string
+  const api = new NotionAPI()
+
+  const response = await api.getPage(id)
+  id = idToUuid(id)
+  const collection = Object.values(response.collection)[0]?.value
+  const block = response.block
+  const schema = collection?.schema
+
+  const rawMetadata = block[id].value
+
+  // Check Type
+  if (
+    rawMetadata?.type !== "collection_view_page" &&
+    rawMetadata?.type !== "collection_view"
+  ) {
+    return []
+  } else {
+    // Construct Data
+    const pageIds = getAllPageIds(response)
+    const data = []
+    for (let i = 0; i < pageIds.length; i++) {
+      const id = pageIds[i]
+      const properties = (await getPageProperties(id, block, schema)) || null
+      // Add fullwidth, createdtime to properties
+      properties.createdTime = new Date(
+        block[id].value?.created_time
+      ).toString()
+      properties.fullWidth =
+        (block[id].value?.format as any)?.page_full_width ?? false
+
+      data.push(properties)
+    }
+
+    // Sort by date
+    data.sort((a: any, b: any) => {
+      const dateA: any = new Date(a?.date?.start_date || a.createdTime)
+      const dateB: any = new Date(b?.date?.start_date || b.createdTime)
+      return dateB - dateA
+    })
+
+    global.notionData = { TPosts: data, savedDate: new Date() }
+
+    const posts = filterPosts(data as TPosts)
+    return posts
+  }
+}
